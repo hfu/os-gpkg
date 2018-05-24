@@ -19,7 +19,7 @@ const inverseProject = (geometry, cs) => {
       break
     case 'Polygon':
       for (let i in geometry.coordinates) {
-        for(let j in geometry.coordinates[i]) {
+        for (let j in geometry.coordinates[i]) {
           geometry.coordinates[i][j] = cs.inverse(geometry.coordinates[i][j])
         }
       }
@@ -35,33 +35,34 @@ const inverseProject = (geometry, cs) => {
       }
       break
     default:
-      throw `${geometry.type} not supported.`
+      throw new Error(`${geometry.type} not supported.`)
   }
   return geometry
 }
 
 const put = (fr) => {
-  if (fr.getGeometry().srsId !== 27700) throw `srid ${fr.getGeometry().srsId} unknown.`
-  let geometry = inverseProject(fr.getGeometry().geometry.toGeoJSON(), local)
-  // let properties = fr.values
-  let properties = {}
-  for (const k of ['prop_value', 'feat_type', 'sub_type']) {
-    if (fr.values[k]) properties[k] = fr.values[k]
+  if (fr.getGeometry().srsId !== 27700) {
+    throw new Error(`srid ${fr.getGeometry().srsId} unknown.`)
   }
-  delete properties[fr.getGeometryColumn().name]
-  let f = modify({type: 'Feature', geometry: geometry, properties: properties})
+  let f = modify({
+    type: 'Feature',
+    geometry: inverseProject(fr.getGeometry().geometry.toGeoJSON(), local),
+    properties: fr.values
+  })
   if (f) console.log(JSON.stringify(f))
 }
 
 const dump = (path) => {
-  if (!fs.existsSync(path)) throw `${path} does not exist.`
+  if (!fs.existsSync(path)) throw new Error(`${path} does not exist.`)
   gpkg.GeoPackageManager.open(path, (err, gpkg) => {
     if (err) throw err
     gpkg.getFeatureTables((err, names) => {
       if (err) throw err
       for (const name of names) {
         gpkg.getFeatureDaoWithTableName(name, (err, dao) => {
+          if (err) throw err
           dao.queryForEach((err, row, rowDone) => {
+            if (err) throw err
             put(dao.getFeatureRow(row))
             rowDone()
           })

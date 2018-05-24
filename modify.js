@@ -4,6 +4,13 @@ module.exports = (f) => {
     minzoom: 14,
     maxzoom: 14
   }
+
+  for (const k of Object.keys(f.properties)) {
+    if (['prop_value', 'feat_type', 'sub_type'].indexOf(k) === -1) {
+      delete f.properties[k]
+    }
+  }
+
   switch (f.properties.feat_type) {
     case 'ContourLine':
       if (f.properties.prop_type % 100 === 0) {
