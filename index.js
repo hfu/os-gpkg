@@ -18,6 +18,7 @@ const inverseProject = (geometry, cs) => {
       }
       break
     case 'Polygon':
+    case 'MultiLineString':
       for (let i in geometry.coordinates) {
         for (let j in geometry.coordinates[i]) {
           geometry.coordinates[i][j] = cs.inverse(geometry.coordinates[i][j])
@@ -44,10 +45,13 @@ const put = (fr) => {
   if (fr.getGeometry().srsId !== 27700) {
     throw new Error(`srid ${fr.getGeometry().srsId} unknown.`)
   }
+  let geometry = inverseProject(fr.getGeometry().geometry.toGeoJSON(), local)
+  let properties = fr.values
+  delete properties[fr.getGeometryColumn().name]
   let f = modify({
     type: 'Feature',
-    geometry: inverseProject(fr.getGeometry().geometry.toGeoJSON(), local),
-    properties: fr.values
+    geometry: geometry,
+    properties: properties
   })
   if (f) console.log(JSON.stringify(f))
 }

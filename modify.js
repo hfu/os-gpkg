@@ -7,7 +7,7 @@ module.exports = (f) => {
 
   for (const k of Object.keys(f.properties)) {
     if (['prop_value', 'feat_type', 'sub_type'].indexOf(k) === -1) {
-      delete f.properties[k]
+      //delete f.properties[k]
     }
   }
 
@@ -28,7 +28,7 @@ module.exports = (f) => {
       }
       break
     default:
-      console.error(`unknown ${f.properties.f_type}`)
+      // console.error(`unknown ${f.properties.f_type}`)
       break
   }
   return f

@@ -26,11 +26,41 @@ $ vi config/default.hjson
 $ node index.js > os.ndjson
 ```
 
-## tippecanoe
+## Several statistics
+### BDLINE
+gpkg 1.1GB
+
+### CodePoint_Open
+gpkg 279MB
+
+### OPEN_GREENSPACE
+gpkg 104MB
+
+### OPENMAP_LOCAL
+gpkg 7.0GB
+
+### OSOpenNames
+gpkg 1.9GB
+
+### OPEN_RIVERS
+gpkg 167MB
+
+### OPEN_ROADS
+gpkg 1.9GB
+
+### OSTerrain50
+gpkg 3.0GB
+
+### VMDVEC
+gpkg 7.0GB
+
+## Convert (NDJSON of) GeoJSON to vector tiles
 
 ```console
+$ tippecanoe -f -o os.mbtiles os.ndjson
 ```
 
-# note
+##
+
 # note
 The output of this program needs acknowledgement "[Contains OS data © Crown copyright and database right (year)](https://www.ordnancesurvey.co.uk/business-and-government/licensing/using-creating-data-with-os-products/os-opendata.html)"
