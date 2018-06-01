@@ -1,13 +1,30 @@
 {
   gpkgs: [
-    BDLINE_October17.gpkg
-    CodePoint_Open_February18.gpkg
-    OPEN_GREENSPACE_October17.gpkg
-    OPENMAP_LOCAL_October17.gpkg
-    OSOpenNames_Jan18.gpkg
-    OPEN_RIVERS_October17.gpkg
-    OPEN_ROADS_October17.gpkg
-    OSTerrain50_Contours.gpkg
-    VMDVEC_November17.gpkg
+    //{fn: BDLINE_October17.gpkg, id: bdline}
+/*
+    {
+      fn: CodePoint_Open_February18.gpkg
+      id: codepoint
+    }
+*/
+    //OPEN_GREENSPACE_October17.gpkg
+    ///OPENMAP_LOCAL_October17.gpkg
+    ///OSOpenNames_Jan18.gpkg
+    {
+      fn: OSOpenNames_Jan18.gpkg
+      id: names
+    }
+    //OPEN_RIVERS_October17.gpkg
+/*
+    {
+      fn: OPEN_ROADS_October17.gpkg
+      id: roads
+    }
+    {
+      fn: OSTerrain50_Contours.gpkg
+      id: terrain
+    }
+*/
+    //VMDVEC_November17.gpkg
   ]
 }

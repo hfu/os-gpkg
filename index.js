@@ -13,6 +13,7 @@ const inverseProject = (geometry, cs) => {
       geometry.coordinates = cs.inverse(geometry.coordinates)
       break
     case 'LineString':
+    case 'MultiPoint':
       for (let i in geometry.coordinates) {
         geometry.coordinates[i] = cs.inverse(geometry.coordinates[i])
       }
@@ -41,13 +42,14 @@ const inverseProject = (geometry, cs) => {
   return geometry
 }
 
-const put = (fr) => {
+const put = (fr, id) => {
   if (fr.getGeometry().srsId !== 27700) {
     throw new Error(`srid ${fr.getGeometry().srsId} unknown.`)
   }
   let geometry = inverseProject(fr.getGeometry().geometry.toGeoJSON(), local)
   let properties = fr.values
   delete properties[fr.getGeometryColumn().name]
+  properties._file = id
   let f = modify({
     type: 'Feature',
     geometry: geometry,
@@ -56,7 +58,8 @@ const put = (fr) => {
   if (f) console.log(JSON.stringify(f))
 }
 
-const dump = (path) => {
+const dump = (params) => {
+  const path = `src/${params.fn}`
   if (!fs.existsSync(path)) throw new Error(`${path} does not exist.`)
   gpkg.GeoPackageManager.open(path, (err, gpkg) => {
     if (err) throw err
@@ -67,7 +70,7 @@ const dump = (path) => {
           if (err) throw err
           dao.queryForEach((err, row, rowDone) => {
             if (err) throw err
-            put(dao.getFeatureRow(row))
+            put(dao.getFeatureRow(row), params.id)
             rowDone()
           })
         })
@@ -76,6 +79,6 @@ const dump = (path) => {
   })
 }
 
-for (let gpkg of config.get('gpkgs')) {
-  dump(`src/${gpkg}`)
+for (let params of config.get('gpkgs')) {
+  dump(params)
 }
